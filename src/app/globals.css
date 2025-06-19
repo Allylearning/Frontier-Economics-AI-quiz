@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 259 41% 12%; /* Dark Purple #1A122B */
+    --foreground: 0 0% 4%; /* #0a0a0a */
+
+    --card: 0 0% 100%;
+    --card-foreground: 224 71% 4%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 71% 4%;
+
+    --primary: 195 39% 37%; /* Deep Blue #387788 */
+    --primary-foreground: 195 39% 98%; /* Light text on primary */
+
+    --secondary: 215 28% 84.3%; /* Lighter blue/gray */
+    --secondary-foreground: 224 71% 4%;
+
+    --muted: 215 28% 84.3%;
+    --muted-foreground: 0 0% 4%; /* #0a0a0a */
+
+    --accent: 145 23% 85%; /* New Accent #D1E0D7 */
+    --accent-foreground: 224 71% 4%; /* Dark text on light accent */
+
+    --destructive: 0 72% 51%; /* Standard destructive red */
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 215 20% 80%; /* Slightly darker border for definition */
+    --input: 215 20% 88%; /* Input field background */
+    --ring: 195 39% 47%; /* Ring color related to primary */
+
+    --radius: 0.5rem;
+
+    --chart-1: 195 39% 37%;
+    --chart-2: 145 23% 85%; /* Updated to new accent */
+    --chart-3: 210 30% 50%;
+    --chart-4: 30 80% 60%;
+    --chart-5: 120 30% 50%;
+
+    --sidebar-background: 216 20% 92%;
+    --sidebar-foreground: 224 71% 4%;
+    --sidebar-primary: 195 39% 37%;
+    --sidebar-primary-foreground: 195 39% 98%;
+    --sidebar-accent: 145 23% 85%; /* Updated to new accent */
+    --sidebar-accent-foreground: 224 71% 4%; /* Updated to new accent foreground */
+    --sidebar-border: 215 20% 75%;
+    --sidebar-ring: 195 39% 47%;
+  }
+
+  .dark {
+    --background: 224 71% 4%;
+    --foreground: 0 0% 4%; /* #0a0a0a - Note: This will be dark text on a dark background */
+
+    --card: 224 71% 6%;
+    --card-foreground: 210 20% 98%;
+
+    --popover: 224 71% 6%;
+    --popover-foreground: 210 20% 98%;
+
+    --primary: 195 39% 50%;
+    --primary-foreground: 195 39% 5%;
+
+    --secondary: 215 28% 15%;
+    --secondary-foreground: 210 20% 98%;
+
+    --muted: 215 28% 15%;
+    --muted-foreground: 0 0% 4%; /* #0a0a0a */
+
+    --accent: 145 23% 40%; /* Dark theme new accent */
+    --accent-foreground: 145 23% 95%; /* Light text on dark accent */
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 215 28% 17%;
+    --input: 215 28% 17%;
+    --ring: 195 39% 50%;
+    
+    --chart-1: 195 39% 50%;
+    --chart-2: 145 23% 40%; /* Updated to new dark accent */
+    --chart-3: 210 30% 70%;
+    --chart-4: 30 80% 70%;
+    --chart-5: 120 30% 70%;
+
+    --sidebar-background: 224 71% 5%;
+    --sidebar-foreground: 210 20% 98%;
+    --sidebar-primary: 195 39% 50%;
+    --sidebar-primary-foreground: 195 39% 5%;
+    --sidebar-accent: 145 23% 40%; /* Updated to new dark accent */
+    --sidebar-accent-foreground: 145 23% 95%; /* Updated to new dark accent foreground */
+    --sidebar-border: 215 28% 15%;
+    --sidebar-ring: 195 39% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    @apply font-body;
+    background-image: url('/images/bg-ai.svg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-headline;
+  }
+}
