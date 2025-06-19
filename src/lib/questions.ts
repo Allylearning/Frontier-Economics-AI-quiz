@@ -61,9 +61,9 @@ Could you assist with drafting this summary?
 
 Best,
 {{playerName}}
-(VP of Strategic Initiatives)
+
 ---
-What action should {{playerName}} take next regarding this request, according to our AI policy?`,
+What action should you take next regarding this request, according to our AI policy {{playerName}}?`,
     questionType: 'scenario-buttons',
     options: [
         'Share with external AI assistant',
