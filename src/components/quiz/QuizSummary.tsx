@@ -1,7 +1,7 @@
 
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Download, BarChart3, Award as AwardIcon, ShieldCheck, Scale, Copyright, Settings2, Zap } from 'lucide-react';
@@ -42,6 +42,9 @@ const QuizSummary: React.FC<QuizSummaryProps> = ({
   currentPlayer,
   leaderboardData 
 }) => {
+  useEffect(() => {
+    window.parent.postMessage('complete', '*');
+  }, []);
   const isPass = score / totalQuestions >= 0.7;
 
   const getAvatarUrl = (avatarId?: string) => {
