@@ -3,7 +3,7 @@
 import { prisma } from '@/lib/prisma';
 import type { LeaderboardEntry } from '@/types';
 
-const LEADERBOARD_LIMIT = 5;
+const LEADERBOARD_LIMIT = 10;
 
 export async function savePlayerScore(playerData: {
   name: string;
