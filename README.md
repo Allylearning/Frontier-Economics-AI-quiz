@@ -1,5 +1,3 @@
-# Firebase Studio
+# Frontier Economics Quiz
 
-This is a NextJS starter in Firebase Studio.
-
-To get started, take a look at src/app/page.tsx.
+This is an interactive quiz to be embedded in an AI awareness and ethics training course, developed for Frontier Economics
