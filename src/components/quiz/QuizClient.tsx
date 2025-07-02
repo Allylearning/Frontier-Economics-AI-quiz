@@ -128,18 +128,38 @@ const QuizClient: React.FC = () => {
 
     const initialAnswers: Record<string, UserAnswer> = {};
     selectedQuestions.forEach(q => {
-      initialAnswers[q.id] = { answer: '', isEvaluated: false };
+      initialAnswers[q.id] = { 
+        answer: q.questionType === 'multi-select' ? [] : '', 
+        isEvaluated: false 
+      };
     });
     setUserAnswers(initialAnswers);
 
     setQuizState('active');
   }, []);
 
-  const handleAnswerChange = (questionId: string, answer: string) => {
-    setUserAnswers(prev => ({
-      ...prev,
-      [questionId]: { ...prev[questionId], answer },
-    }));
+  const handleAnswerChange = (questionId: string, changedAnswer: string) => {
+    const question = currentQuestions.find(q => q.id === questionId);
+    if (!question) return;
+  
+    if (question.questionType === 'multi-select') {
+      setUserAnswers(prev => {
+        const currentAnswerArray = (prev[questionId]?.answer as string[] | undefined) || [];
+        const newAnswerArray = currentAnswerArray.includes(changedAnswer)
+          ? currentAnswerArray.filter(a => a !== changedAnswer)
+          : [...currentAnswerArray, changedAnswer];
+        return {
+          ...prev,
+          [questionId]: { ...prev[questionId], answer: newAnswerArray },
+        };
+      });
+    } else {
+      // Logic for single-choice questions ('multiple-choice', 'scenario-buttons')
+      setUserAnswers(prev => ({
+        ...prev,
+        [questionId]: { ...prev[questionId], answer: changedAnswer },
+      }));
+    }
   };
 
   const handleGetHint = async (questionId: string) => {
@@ -180,10 +200,17 @@ const QuizClient: React.FC = () => {
       }));
       return;
     }
+    
+    let isCorrect = false;
+    if (question.questionType === 'multi-select' && Array.isArray(userAnswerObj.answer) && Array.isArray(question.correctAnswer)) {
+      const userAnswersSorted = [...userAnswerObj.answer].sort();
+      const correctAnswersSorted = [...question.correctAnswer].sort();
+      isCorrect = JSON.stringify(userAnswersSorted) === JSON.stringify(correctAnswersSorted);
+    } else {
+      isCorrect = userAnswerObj.answer === question.correctAnswer;
+    }
 
-    const isCorrect = userAnswerObj.answer === question.correctAnswer;
     const feedbackText = question.detailedFeedback;
-
     const evaluationResult: AnswerEvaluation = { isCorrect, feedback: feedbackText };
 
     await new Promise(resolve => setTimeout(resolve, 100)); 
@@ -240,8 +267,8 @@ const QuizClient: React.FC = () => {
       if (userAnswer && userAnswer.evaluation && !userAnswer.evaluation.isCorrect) {
         incorrectAttempts.push({
           questionText: questionTextForSummary,
-          userAnswer: userAnswer.answer,
-          correctAnswer: q.correctAnswer,
+          userAnswer: Array.isArray(userAnswer.answer) ? userAnswer.answer.join(', ') : userAnswer.answer,
+          correctAnswer: Array.isArray(q.correctAnswer) ? q.correctAnswer.join(', ') : q.correctAnswer as string,
           detailedFeedback: q.detailedFeedback,
         });
       }
@@ -302,7 +329,7 @@ const QuizClient: React.FC = () => {
             question={questionForDisplay}
             questionNumber={currentQuestionIndex + 1}
             totalQuestions={currentQuestions.length}
-            userAnswer={userAnswers[questionForDisplay.id]?.answer || ''}
+            userAnswer={userAnswers[questionForDisplay.id]?.answer || []}
             onAnswerChange={(answer) => handleAnswerChange(questionForDisplay.id, answer)}
             onSubmitAnswer={() => handleSubmitAnswer(questionForDisplay.id)}
             onGetHint={() => handleGetHint(questionForDisplay.id)}
