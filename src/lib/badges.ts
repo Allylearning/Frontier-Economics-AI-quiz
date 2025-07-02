@@ -25,7 +25,7 @@ export const badgeDefinitions: Badge[] = [
   {
     id: 'ip-guardian',
     name: 'IP Guardian',
-    description: 'Recognizes the importance of intellectual property in AI-generated content.',
+    description: 'Recognises the importance of intellectual property in AI-generated content.',
     icon: 'Copyright' as BadgeIconName,
     questionIds: ['q6'],
   },

@@ -1,3 +1,4 @@
+
 'use client';
 
 import React from 'react';
@@ -61,7 +62,7 @@ const QuizSummary: React.FC<QuizSummaryProps> = ({
           </div>
           <CardTitle className="text-3xl font-headline">Quiz Completed, {currentPlayer.name}!</CardTitle>
           <CardDescription className="text-lg">
-            You scored {score} points!.
+            You scored {score} points!
           </CardDescription>
         </CardHeader>
         <CardFooter className="flex flex-col sm:flex-row justify-center items-center gap-4 pt-2">
@@ -128,7 +129,7 @@ const QuizSummary: React.FC<QuizSummaryProps> = ({
         <Card className="shadow-xl">
           <CardHeader>
             <CardTitle className="text-xl font-headline flex items-center text-primary">
-              <AwardIcon className="mr-2 h-6 w-6 text-yellow-500" /> You've Earned Badges!
+              <AwardIcon className="mr-2 h-6 w-6" /> You've Earned Badges!
             </CardTitle>
             <CardDescription>Congratulations on your achievements!</CardDescription>
           </CardHeader>
