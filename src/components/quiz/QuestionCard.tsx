@@ -28,12 +28,13 @@ interface QuestionCardProps {
   isLoadingHint: boolean;
   isLoadingEvaluation: boolean;
   isEvaluated: boolean;
-  hintUsedThisAttempt: boolean;
+  hintUsedThisQuestion: boolean;
   onNextQuestion: () => void;
   isLastQuestion: boolean;
   onFinishQuiz: () => void;
   avatarId?: string;
   playerName?: string;
+  streak: number;
 }
 
 const QuestionCard: React.FC<QuestionCardProps> = ({
@@ -49,12 +50,13 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
   isLoadingHint,
   isLoadingEvaluation,
   isEvaluated,
-  hintUsedThisAttempt,
+  hintUsedThisQuestion,
   onNextQuestion,
   isLastQuestion,
   onFinishQuiz,
   avatarId,
   playerName,
+  streak,
 }) => {
   const [isPlayingVoiceover, setIsPlayingVoiceover] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -117,7 +119,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
   };
   
   const handleGetHint = async () => {
-    if (hintUsedThisAttempt) return;
+    if (hintUsedThisQuestion) return;
     await onGetHint();
     setShowHintAlert(true);
   }
@@ -257,12 +259,25 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
         )}
         {isEvaluated && evaluation && (
           <Alert variant={evaluation.isCorrect ? "default" : "destructive"} className={`mt-4 border-2 ${evaluation.isCorrect ? 'border-green-500 bg-green-500/10' : 'border-red-500 bg-red-500/10'}`}>
-            {evaluation.isCorrect ? <CheckCircle2 className="h-4 w-4" /> : <AlertCircle className="h-4 w-4" />}
-            <AlertTitle>{evaluation.isCorrect ? "That's Right!" : 'Not quite right'}</AlertTitle>
+            {evaluation.isCorrect ? <CheckCircle2 className="h-4 w-4 text-green-500" /> : <AlertCircle className="h-4 w-4 text-red-500" />}
+            <AlertTitle>
+              {evaluation.isCorrect ? "That's Right!" : 'Not quite right'}
+              {evaluation.isCorrect && typeof evaluation.pointsAwarded !== 'undefined' && (
+                  <span className="font-bold text-green-600 ml-2">
+                      +{evaluation.pointsAwarded}
+                  </span>
+              )}
+            </AlertTitle>
             <AlertDescription>
               {evaluation.feedback}
-              {!evaluation.isCorrect && question.correctAnswer && question.questionType === 'multiple-choice' && (
+              {evaluation.isCorrect && streak > 1 && (
+                <p className="mt-2 font-semibold text-orange-500">{streak}x Streak Bonus!</p>
+              )}
+              {!evaluation.isCorrect && question.correctAnswer && question.questionType !== 'multi-select' && (
                 <p className="mt-2"><strong>Correct Answer:</strong> {question.correctAnswer}</p>
+              )}
+              {!evaluation.isCorrect && Array.isArray(question.correctAnswer) && (
+                 <p className="mt-2"><strong>Correct Answers:</strong> {question.correctAnswer.join(', ')}</p>
               )}
             </AlertDescription>
           </Alert>
@@ -279,14 +294,14 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
          <Button 
             variant="ghost" 
             onClick={handleGetHint}
-            disabled={isLoadingHint || isEvaluated || hintUsedThisAttempt}
+            disabled={isLoadingHint || isEvaluated || hintUsedThisQuestion}
             aria-label="Get a hint"
             className="text-foreground hover:text-foreground hover:bg-transparent flex items-center space-x-2 group p-0"
           >
             <div className="p-0.5 border-2 border-transparent group-hover:border-[#6e6eff] rounded-full transition-all">
               <Image src="/images/AI Avatar.svg" alt="AI Hint Avatar" width={40} height={40} className="rounded-full" />
             </div>
-            <span>{isLoadingHint ? 'Getting Hint...' : hintUsedThisAttempt ? 'Hint Used' : 'Get Hint'}</span>
+            <span>{isLoadingHint ? 'Getting Hint...' : hintUsedThisQuestion ? 'Hint Used' : 'Get Hint'}</span>
           </Button>
         
         {isEvaluated ? (

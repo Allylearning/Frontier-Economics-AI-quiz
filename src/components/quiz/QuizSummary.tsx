@@ -1,7 +1,6 @@
-
 'use client';
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Download, BarChart3, Award as AwardIcon, ShieldCheck, Scale, Copyright, Settings2, Zap } from 'lucide-react';
@@ -16,7 +15,6 @@ import { avatarOptions } from '@/lib/avatars';
 interface QuizSummaryProps {
   summaryText: string;
   score: number;
-  totalQuestions: number;
   earnedBadges: Badge[];
   onRestartQuiz: () => void;
   currentPlayer: Omit<LeaderboardEntry, 'id'>; 
@@ -36,17 +34,11 @@ const iconMap: Record<BadgeIconName, FunctionComponent<LucideProps>> = {
 const QuizSummary: React.FC<QuizSummaryProps> = ({ 
   summaryText, 
   score, 
-  totalQuestions, 
   earnedBadges, 
   onRestartQuiz, 
   currentPlayer,
   leaderboardData 
 }) => {
-  useEffect(() => {
-    window.parent.postMessage('complete', '*');
-  }, []);
-  const isPass = score / totalQuestions >= 0.7;
-
   const getAvatarUrl = (avatarId?: string) => {
     const avatar = avatarOptions.find(opt => opt.id === avatarId);
     return avatar ? avatar.url : 'https://placehold.co/64x64/ccc/FFFFFF.png?text=?'; 
@@ -69,7 +61,7 @@ const QuizSummary: React.FC<QuizSummaryProps> = ({
           </div>
           <CardTitle className="text-3xl font-headline">Quiz Completed, {currentPlayer.name}!</CardTitle>
           <CardDescription className="text-lg">
-            You scored {score} out of {totalQuestions}.
+            You scored {score} points!.
           </CardDescription>
         </CardHeader>
         <CardFooter className="flex flex-col sm:flex-row justify-center items-center gap-4 pt-2">

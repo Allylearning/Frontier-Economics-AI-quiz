@@ -15,6 +15,7 @@ export interface QuizQuestion {
 export interface AnswerEvaluation {
   isCorrect: boolean;
   feedback: string;
+  pointsAwarded?: number;
 }
 
 export interface Hint {
@@ -25,6 +26,7 @@ export interface UserAnswer {
   answer: string | string[];
   evaluation?: AnswerEvaluation;
   isEvaluated: boolean;
+  hintUsed?: boolean;
 }
 
 export interface LeaderboardEntry {

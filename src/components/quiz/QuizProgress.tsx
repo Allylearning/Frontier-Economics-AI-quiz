@@ -8,9 +8,10 @@ interface QuizProgressProps {
   total: number;
   avatarId?: string;
   playerName?: string;
+  streak: number;
 }
 
-const QuizProgress: React.FC<QuizProgressProps> = ({ current, total, avatarId, playerName }) => {
+const QuizProgress: React.FC<QuizProgressProps> = ({ current, total, avatarId, playerName, streak }) => {
   const progressPercentage = total > 0 ? (current / total) * 100 : 0;
 
   const getAvatarUrl = (avId?: string) => {
@@ -39,6 +40,12 @@ const QuizProgress: React.FC<QuizProgressProps> = ({ current, total, avatarId, p
         </div>
         <Progress value={progressPercentage} aria-label={`Quiz progress: ${current} of ${total} questions answered`} />
       </div>
+      {streak > 1 && (
+        <div className="text-center ml-4">
+          <div className="font-bold text-lg text-orange-400">{streak}x</div>
+          <div className="text-xs text-white uppercase">Streak 🔥</div>
+        </div>
+      )}
     </div>
   );
 };

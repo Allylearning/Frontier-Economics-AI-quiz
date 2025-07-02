@@ -29,6 +29,7 @@ const QuizClient: React.FC = () => {
   const [isLoadingSummary, setIsLoadingSummary] = useState(false);
   const [quizSummaryText, setQuizSummaryText] = useState<string>('');
   const [score, setScore] = useState(0);
+  const [streak, setStreak] = useState(0);
   const [showConfetti, setShowConfetti] = useState(false);
   const [confettiSuccess, setConfettiSuccess] = useState(false);
   const [earnedBadges, setEarnedBadges] = useState<Badge[]>([]);
@@ -36,7 +37,6 @@ const QuizClient: React.FC = () => {
   const [avatarId, setAvatarId] = useState<string>('');
   const [selectedThemeColor, setSelectedThemeColor] = useState<string | null>(null);
   const [selectedThemeForegroundColor, setSelectedThemeForegroundColor] = useState<string | null>(null);
-  const [hintUsedThisAttempt, setHintUsedThisAttempt] = useState<boolean>(false);
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>([]);
 
 
@@ -76,10 +76,10 @@ const QuizClient: React.FC = () => {
     setIsLoadingSummary(false);
     setQuizSummaryText('');
     setScore(0);
+    setStreak(0);
     setShowConfetti(false);
     setSelectedThemeColor(null);
     setSelectedThemeForegroundColor(null);
-    setHintUsedThisAttempt(false);
     setLeaderboardData([]);
     
   }, []);
@@ -113,8 +113,8 @@ const QuizClient: React.FC = () => {
     setIsLoadingSummary(false);
     setQuizSummaryText('');
     setScore(0);
+    setStreak(0);
     setShowConfetti(false);
-    setHintUsedThisAttempt(false);
     setLeaderboardData([]);
 
     let selectedQuestions: QuizQuestion[];
@@ -163,10 +163,6 @@ const QuizClient: React.FC = () => {
   };
 
   const handleGetHint = async (questionId: string) => {
-    if (hintUsedThisAttempt) {
-      toast({ title: "Hint Limit Reached", description: "You can only use one hint per quiz attempt.", variant: "default" });
-      return;
-    }
     if (hints[questionId]) return;
     setIsLoadingHint(true);
     try {
@@ -176,7 +172,15 @@ const QuizClient: React.FC = () => {
       const originalQuestionText = questionPool.find(q => q.id === questionId)?.text || question.text;
       const result = await generateHint({ question: originalQuestionText.replace(/{{playerName}}/g, playerName.split(' ')[0] || 'User'), approvedAnswers: question.approvedAnswers });
       setHints(prev => ({ ...prev, [questionId]: { text: result.hint } }));
-      setHintUsedThisAttempt(true);
+      
+      setUserAnswers(prev => {
+        const currentAnswerState = prev[questionId] || { answer: '', isEvaluated: false };
+        return {
+          ...prev,
+          [questionId]: { ...currentAnswerState, hintUsed: true },
+        };
+      });
+
     } catch (error) {
       console.error("Error getting hint:", error);
       toast({ title: "Error", description: "Could not fetch hint. Please try again.", variant: "destructive" });
@@ -215,14 +219,23 @@ const QuizClient: React.FC = () => {
 
     await new Promise(resolve => setTimeout(resolve, 100)); 
 
+    if (isCorrect) {
+      const hintWasUsed = userAnswers[questionId]?.hintUsed || false;
+      const basePoints = hintWasUsed ? 50 : 100;
+      const streakBonus = streak * 10; // +10 points for every question in the current streak
+      const pointsAwarded = basePoints + streakBonus;
+      
+      setScore(s => s + pointsAwarded);
+      setStreak(s => s + 1);
+      evaluationResult.pointsAwarded = pointsAwarded;
+    } else {
+      setStreak(0);
+    }
+
     setUserAnswers(prev => ({
       ...prev,
       [questionId]: { ...prev[questionId], evaluation: evaluationResult, isEvaluated: true },
     }));
-
-    if (isCorrect) {
-      setScore(s => s + 1);
-    }
 
     setIsLoadingEvaluation(false);
   };
@@ -236,8 +249,10 @@ const QuizClient: React.FC = () => {
   const finishQuiz = async () => {
     setQuizState('finished');
     setIsLoadingSummary(true);
+    
+    const possibleScore = currentQuestions.length * 100;
+    const pass = score / possibleScore >= 0.7;
 
-    const pass = score / currentQuestions.length >= 0.7;
     setConfettiSuccess(pass);
     setShowConfetti(true);
     setTimeout(() => setShowConfetti(false), 4000);
@@ -324,6 +339,7 @@ const QuizClient: React.FC = () => {
             total={currentQuestions.length} 
             avatarId={avatarId}
             playerName={playerName}
+            streak={streak}
           />
           <QuestionCard
             question={questionForDisplay}
@@ -338,12 +354,13 @@ const QuizClient: React.FC = () => {
             isLoadingHint={isLoadingHint}
             isLoadingEvaluation={isLoadingEvaluation}
             isEvaluated={userAnswers[questionForDisplay.id]?.isEvaluated || false}
-            hintUsedThisAttempt={hintUsedThisAttempt}
+            hintUsedThisQuestion={userAnswers[questionForDisplay.id]?.hintUsed || false}
             onNextQuestion={handleNextQuestion}
             isLastQuestion={currentQuestionIndex === currentQuestions.length - 1}
             onFinishQuiz={finishQuiz}
             avatarId={avatarId}
             playerName={playerName.split(' ')[0] || 'Player'}
+            streak={streak}
           />
         </div>
       )}
@@ -357,7 +374,6 @@ const QuizClient: React.FC = () => {
           <QuizSummary
             summaryText={quizSummaryText}
             score={score}
-            totalQuestions={currentQuestions.length}
             earnedBadges={earnedBadges}
             onRestartQuiz={() => { 
                 setPlayerName(''); 
