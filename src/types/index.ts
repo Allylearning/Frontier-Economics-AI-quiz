@@ -4,9 +4,9 @@ import type { LucideIcon } from 'lucide-react';
 export interface QuizQuestion {
   id: string;
   text: string;
-  questionType: 'multiple-choice' | 'scenario-buttons';
+  questionType: 'multiple-choice' | 'scenario-buttons' | 'multi-select';
   options: string[];
-  correctAnswer: string;
+  correctAnswer: string | string[];
   approvedAnswers: string[];
   detailedFeedback: string;
   voiceoverUrl?: string;
@@ -22,7 +22,7 @@ export interface Hint {
 }
 
 export interface UserAnswer {
-  answer: string;
+  answer: string | string[];
   evaluation?: AnswerEvaluation;
   isEvaluated: boolean;
 }
@@ -69,4 +69,3 @@ export interface AvatarOption {
   accentColor: string; // HSL string, e.g., "16 98% 61%"
   accentForegroundColor: string; // HSL string e.g., "0 0% 98%"
 }
-

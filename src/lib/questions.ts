@@ -110,15 +110,23 @@ export const questionPool: QuizQuestion[] = [
   {
       id: 'q8',
       text: 'Which of the following are key risks that occur when using generative AI, that must be accounted for through best practice?',
-      questionType: 'multi-select', // Changed to multi-select
+      questionType: 'multi-select',
       options: [
           'Hallucinations',
           'Copyright infringement',
           'Client feedback delays',
           'Unreliable analysis or code output'
       ],
-      correctAnswer: ['Hallucinations', 'Copyright infringement', 'Unreliable analysis or code output'], // Updated to an array of correct answers
-      approvedAnswers: [['Hallucinations', 'Copyright infringement', 'Unreliable analysis or code output']], // Updated to an array of array of approved answers
+      correctAnswer: [
+        'Hallucinations', 
+        'Copyright infringement', 
+        'Unreliable analysis or code output'
+      ],
+      approvedAnswers: [
+        'Hallucinations', 
+        'Copyright infringement', 
+        'Unreliable analysis or code output'
+      ],
       detailedFeedback: 'These are the critical risks highlighted in the policy. Client feedback delays are not mentioned as an AI-specific risk.',
       voiceoverUrl: '/audio/8.mp3',
   },

@@ -9,6 +9,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { PlayCircle, PauseCircle, AlertCircle, CheckCircle2, Info } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
@@ -18,7 +19,7 @@ interface QuestionCardProps {
   question: QuizQuestion;
   questionNumber: number;
   totalQuestions: number;
-  userAnswer: string | string[]; // Modified to allow string array
+  userAnswer: string | string[];
   onAnswerChange: (answer: string) => void;
   onSubmitAnswer: () => Promise<void>;
   onGetHint: () => Promise<void>;
@@ -39,7 +40,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
   question,
   questionNumber,
   totalQuestions,
-  userAnswer,  // Could be string | string[]
+  userAnswer,
   onAnswerChange,
   onSubmitAnswer,
   onGetHint,
@@ -129,27 +130,31 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
     const avatar = avatarOptions.find(opt => opt.id === avId);
     return avatar ? avatar.url : 'https://placehold.co/40x40.png'; 
   };
-
-  return (
-    <Card className="w-full shadow-lg">
-      <CardHeader>
-        <div className="flex justify-between items-start">
-          <CardTitle className="text-xl md:text-2xl font-headline mb-1">Question {questionNumber}</CardTitle>
-          {question.voiceoverUrl && (
-            <Button variant="ghost" size="icon" onClick={toggleVoiceover} aria-label={isPlayingVoiceover ? "Pause voiceover" : "Play voiceover"} className="group">
-              {isPlayingVoiceover ? <PauseCircle className="h-6 w-6 text-primary group-hover:text-white" /> : <PlayCircle className="h-6 w-6 text-primary group-hover:text-white" />}
-            </Button>
-          )}
-        </div>
-        {question.questionType !== 'scenario-buttons' && (
-          <CardDescription className="text-base md:text-lg leading-relaxed">{question.text}</CardDescription>
-        )}
-        {question.voiceoverUrl && (
-          <audio ref={audioRef} src={question.voiceoverUrl} onEnded={handleAudioEnd} className="hidden" />
-        )}
-      </CardHeader>
-      <CardContent>
-        {question.questionType === 'scenario-buttons' ? (
+  
+  const renderQuestionContent = () => {
+    switch(question.questionType) {
+      case 'multi-select':
+        return (
+          <div className="space-y-2" aria-label={`Options for question ${questionNumber}`}>
+            {question.options.map((option, index) => {
+              const isChecked = Array.isArray(userAnswer) && userAnswer.includes(option);
+              return (
+                <div key={index} className="flex items-center space-x-2 p-3 rounded-md border border-border has-[:checked]:border-primary has-[:checked]:bg-primary/10">
+                  <Checkbox
+                    id={`${question.id}-option-${index}`}
+                    checked={isChecked}
+                    onCheckedChange={() => onAnswerChange(option)}
+                    disabled={isEvaluated}
+                    aria-label={option}
+                  />
+                  <Label htmlFor={`${question.id}-option-${index}`} className="flex-1 text-base cursor-pointer">{option}</Label>
+                </div>
+              );
+            })}
+          </div>
+        );
+      case 'scenario-buttons':
+        return (
           <div className="space-y-4">
             {question.id === 'q9' && playerName && avatarId ? (
               <div className="flex items-start space-x-3">
@@ -175,7 +180,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
             {scenarioPrompt && (
                 <p className="text-base md:text-lg leading-relaxed mt-2">{scenarioPrompt}</p>
             )}
-            {/* ... unchanged scenario buttons ... */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
               {question.options.map((option, index) => {
                 const isSelected = userAnswer === option;
                 return (
@@ -200,41 +205,48 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
               })}
             </div>
           </div>
-        ) : question.questionType === 'multi-select' ? (  // Added multi-select handling
-          <div className="space-y-2">
-            {question.options.map((option, index) => {
-              const isChecked = Array.isArray(userAnswer) && userAnswer.includes(option);
-              return (
-                <div key={index} className="flex items-center space-x-2 p-3 rounded-md border border-border hover:bg-accent/80 hover:text-accent-foreground">
-                  <input
-                    type="checkbox"
-                    id={`${question.id}-option-${index}`}
-                    value={option}
-                    checked={isChecked}
-                    onChange={() => {
-                      const newValue = Array.isArray(userAnswer)
-                        ? isChecked
-                          ? userAnswer.filter((item) => item !== option)
-                          : [...userAnswer, option]
-                        : [option];
-                      onAnswerChange(newValue as any); // Cast to any to satisfy string | string[] type
-                    }}
-                    disabled={isEvaluated}
-                    className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm border border-border checked:bg-primary checked:text-primary-foreground h-4 w-4 shrink-0 transition-colors"
-                  />
-                  <label
-                    htmlFor={`${question.id}-option-${index}`}
-                    className="flex-1 text-base cursor-pointer"
-                  >
-                    {option}
-                  </label>
-                </div>
-              );
-            })}
-          </div>
-        ) : ( // Existing multiple-choice handling
-          <>  {/* Added a fragment here */}
+        );
+      case 'multiple-choice':
+      default:
+        return (
+          <RadioGroup
+            value={typeof userAnswer === 'string' ? userAnswer : ''}
+            onValueChange={onAnswerChange}
+            disabled={isEvaluated}
+            className="space-y-2"
+            aria-label={`Options for question ${questionNumber}`}
+          >
+            {question.options.map((option, index) => (
+              <div key={index} className="flex items-center space-x-2 p-3 rounded-md border border-border has-[[data-state=checked]]:border-primary has-[[data-state=checked]]:bg-primary/10">
+                <RadioGroupItem value={option} id={`${question.id}-option-${index}`} />
+                <Label htmlFor={`${question.id}-option-${index}`} className="flex-1 text-base cursor-pointer">{option}</Label>
+              </div>
+            ))}
+          </RadioGroup>
+        );
+    }
+  };
+
+  return (
+    <Card className="w-full shadow-lg">
+      <CardHeader>
+        <div className="flex justify-between items-start">
+          <CardTitle className="text-xl md:text-2xl font-headline mb-1">Question {questionNumber}</CardTitle>
+          {question.voiceoverUrl && (
+            <Button variant="ghost" size="icon" onClick={toggleVoiceover} aria-label={isPlayingVoiceover ? "Pause voiceover" : "Play voiceover"} className="group">
+              {isPlayingVoiceover ? <PauseCircle className="h-6 w-6 text-primary group-hover:text-white" /> : <PlayCircle className="h-6 w-6 text-primary group-hover:text-white" />}
+            </Button>
+          )}
+        </div>
+        {question.questionType !== 'scenario-buttons' && (
+          <CardDescription className="text-base md:text-lg leading-relaxed">{question.text}</CardDescription>
         )}
+        {question.voiceoverUrl && (
+          <audio ref={audioRef} src={question.voiceoverUrl} onEnded={handleAudioEnd} className="hidden" />
+        )}
+      </CardHeader>
+      <CardContent>
+        {renderQuestionContent()}
 
         {showHintAlert && hint && (
           <Alert variant="default" className="mt-4 bg-secondary/50">
@@ -243,26 +255,13 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
             <AlertDescription>{hint.text}</AlertDescription>
           </Alert>
         )}
-        {isEvaluated && evaluation && (  // Modified evaluation feedback
+        {isEvaluated && evaluation && (
           <Alert variant={evaluation.isCorrect ? "default" : "destructive"} className={`mt-4 border-2 ${evaluation.isCorrect ? 'border-green-500 bg-green-500/10' : 'border-red-500 bg-red-500/10'}`}>
             {evaluation.isCorrect ? <CheckCircle2 className="h-4 w-4" /> : <AlertCircle className="h-4 w-4" />}
             <AlertTitle>{evaluation.isCorrect ? "That's Right!" : 'Not quite right'}</AlertTitle>
             <AlertDescription>
               {evaluation.feedback}
               {!evaluation.isCorrect && question.correctAnswer && question.questionType === 'multiple-choice' && (
-                <p className="mt-2"><strong>Correct Answer:</strong> {question.correctAnswer}</p>
-              )}
-              {!evaluation.isCorrect && question.correctAnswer && question.questionType === 'multi-select' && Array.isArray(question.correctAnswer) && (
-                <p className="mt-2">
-                  <strong>Correct Answers:</strong>
-                  <ul>
-                    {question.correctAnswer.map((answer, idx) => (
-                      <li key={idx}>{answer}</li>
-                    ))}
-                  </ul>
-                </p>
-              )}
-              {!evaluation.isCorrect && question.correctAnswer && question.questionType !== 'multi-select' && (
                 <p className="mt-2"><strong>Correct Answer:</strong> {question.correctAnswer}</p>
               )}
             </AlertDescription>
@@ -301,7 +300,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
             </Button>
           )
         ) : (
-          <Button onClick={onSubmitAnswer} disabled={isLoadingEvaluation || !userAnswer.trim()}>
+          <Button onClick={onSubmitAnswer} disabled={isLoadingEvaluation || (Array.isArray(userAnswer) ? userAnswer.length === 0 : !userAnswer.trim())}>
             {isLoadingEvaluation ? 'Submitting...' : 'Submit Answer'}
           </Button>
         )}
