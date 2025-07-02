@@ -233,7 +233,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
             })}
           </div>
         ) : ( // Existing multiple-choice handling
-          // ... (RadioGroup code - unchanged) ...
+          <>  {/* Added a fragment here */}
         )}
 
         {showHintAlert && hint && (
