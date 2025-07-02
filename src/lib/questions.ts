@@ -136,7 +136,7 @@ export const questionPool: QuizQuestion[] = [
     approvedAnswers: ['It outputs plausible but incorrect content, including invented sources'],
     detailedFeedback: 'Do not provide Generative AI output directly to clients without human review – including checking of sources, and having a subject-matter-expert review the content.',
     voiceoverUrl: '/audio/9.mp3',
-  }
+  },
   {
   id: 'q10',
   text: 'How should Generative AI outputs be handled before being shared with clients, {{playerName}}?',
@@ -151,7 +151,7 @@ export const questionPool: QuizQuestion[] = [
   approvedAnswers: ['Reviewed by a human, including source checks and subject-matter-expert input'],
   detailedFeedback: 'Always ensure AI outputs are reviewed by a human and verified for accuracy before sharing with clients.',
   voiceoverUrl: '/audio/10.mp3',
-}
+},
   {
   id: 'q11',
   text: 'To mitigate copyright infringement in AI-generated output, what should you do?',
@@ -166,7 +166,7 @@ export const questionPool: QuizQuestion[] = [
   approvedAnswers: ['Check if any verbatim quotes need sourcing'],
   detailedFeedback: 'Check and properly source any verbatim content in AI outputs to avoid copyright issues.',
   voiceoverUrl: '/audio/11.mp3',
-}
+},
   {
   id: 'q12',
   text: 'What is a key requirement when using AI to produce code or quantitative analysis?',
@@ -181,7 +181,7 @@ export const questionPool: QuizQuestion[] = [
   approvedAnswers: ['Subject the output to the same scrutiny as human-written code'],
   detailedFeedback: 'AI-generated code must be reviewed and tested with the same rigour as human-written code.',
   voiceoverUrl: '/audio/12.mp3',
-}
+},
   {
   id: 'q13',
   text: 'Last question {{playerName}}! The approved AI tools ChatGpt Enterprise or GitHub CoPilot may be used for all Frontier work (whether internal or using client data) unless:',
