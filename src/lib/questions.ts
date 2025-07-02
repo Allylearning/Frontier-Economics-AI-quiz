@@ -4,155 +4,197 @@ import type { QuizQuestion } from '@/types';
 export const questionPool: QuizQuestion[] = [
   {
     id: 'q1',
-    text: '{{playerName}}, what is the primary purpose of our AI policy?',
+    text: '{{playerName}}, which of the following generative AI tools are currently approved for use at Frontier Economics?',
     questionType: 'multiple-choice',
     options: [
-      'To maximise profits using AI.',
-      'To ensure responsible and ethical use of AI tools within our company.',
-      'To replace human employees with AI.',
-      'To collect user data for AI training.'
+      'ChatGPT Enterprise and GitHub Copilot within the Frontier Economics Organisation on GitHub',
+      'Any version of ChatGPT and Google Bard',
+      'ChatGPT Free and Hugging Face',
+      'GitHub Copilot (personal account) and ChatGPT Pro'
     ],
-    correctAnswer: 'To ensure responsible and ethical use of AI tools within our company.',
-    approvedAnswers: ['To ensure responsible and ethical use of AI tools within our company.'],
-    detailedFeedback: 'Our AI policy prioritises ethical considerations, safety, and compliance in all AI applications, guiding employees to use AI tools in a way that aligns with our company values and legal obligations.',
+    correctAnswer: 'ChatGPT Enterprise and GitHub Copilot within the Frontier Economics Organisation on GitHub',
+    approvedAnswers: ['ChatGPT Enterprise and GitHub Copilot within the Frontier Economics Organisation on GitHub'],
+    detailedFeedback: 'Only ChatGPT Enterprise and GitHub Copilot used within Frontier Economics GitHub are approved.',
     voiceoverUrl: '/audio/1.mp3',
   },
   {
     id: 'q2',
-    text: 'Can you use unapproved third-party AI tools for work tasks involving sensitive company data?',
+    text: 'If a staff member wants to use a generative AI tool not currently approved, what should they do?',
     questionType: 'multiple-choice',
     options: [
-      'Yes, if it helps get the job done faster.',
-      'Yes, but only if you don\'t tell anyone.',
-      'No, due to security and privacy risks to our company.',
-      'Only if the data is anonymised.'
+      'Use the tool as long as no client data is involved',
+      'Request sign-off from their Project Director',
+      'Contact the Head of Data Science and IT Security and Data Protection Manager',
+      'Ask another team member who has used the tool before'
     ],
-    correctAnswer: 'No, due to security and privacy risks to our company.',
-    approvedAnswers: ['No, due to security and privacy risks to our company.'],
-    detailedFeedback: 'Using unapproved AI tools for sensitive company data can lead to data breaches, compromise confidential information, and violate privacy regulations. Always use company-vetted tools for such tasks.',
+    correctAnswer: 'Contact the Head of Data Science and IT Security and Data Protection Manager',
+    approvedAnswers: ['Contact the Head of Data Science and IT Security and Data Protection Manager'],
+    detailedFeedback: 'Any additional tools must be approved by both the Head of Data Science and the IT Security and Data Protection Manager.',
     voiceoverUrl: '/audio/2.mp3',
   },
   {
     id: 'q3',
-    text: 'If an AI tool generates content that seems biased, {{playerName}}, what should you do according to our policy?',
+    text: 'When can staff use approved generative AI tools without seeking sign-off?',
     questionType: 'multiple-choice',
     options: [
-      'Use it as is, AI is always objective.',
-      'Modify it slightly to hide the bias.',
-      'Report it to your manager or our designated ethics contact.',
-      'Ignore it and find another AI tool.'
+      'When using them on internal documents',
+      'When the tool is used outside work hours',
+      'When no Client Information or Client Sensitive Information is involved',
+      'When the tool gives high-quality output'
     ],
-    correctAnswer: 'Report it to your manager or our designated ethics contact.',
-    approvedAnswers: ['Report it to your manager or our designated ethics contact.'],
-    detailedFeedback: 'Identifying and reporting bias is crucial for maintaining fairness and ethical standards here. Your report helps us address issues with AI tools and prevent the perpetuation of harmful biases.',
+    correctAnswer: 'When no Client Information or Client Sensitive Information is involved',
+    approvedAnswers: ['When no Client Information or Client Sensitive Information is involved'],
+    detailedFeedback: 'No sign-off is required for uses that do not involve Client or Client Sensitive Information.',
     voiceoverUrl: '/audio/3.mp3',
   },
   {
     id: 'q4',
-    text: `Subject: Project Nightingale - Q3 Financial Projections (CONFIDENTIAL)
-
-Hi Team,
-
-Please find attached the draft financial projections for Q3 regarding Project Nightingale. This document contains highly sensitive information, including unannounced product roadmaps and preliminary revenue forecasts.
-
-ACTION REQUIRED: I need a concise summary of the key takeaways from page 5-7 to include in my upcoming presentation to the board.
-
-Could you assist with drafting this summary?
-
-Best,
-{{playerName}}
-
----
-What action should you take next regarding this request, according to our AI policy {{playerName}}?`,
-    questionType: 'scenario-buttons',
+    text: 'If there\'s any uncertainty about whether client information is involved, what should staff do?',
+    questionType: 'multiple-choice',
     options: [
-        'Share with external AI assistant',
-        'Share with Secure AI assistant',
-        'Share with AI Assistant (Temporary Chat)',
-        'Do not share with AI assistant'
+        'Proceed with caution',
+        'Request a second opinion from a colleague',
+        'Seek sign-off from the relevant Project Director',
+        'Skip the task until further notice'
     ],
-    correctAnswer: 'Do not share with AI assistant',
-    approvedAnswers: ['Do not share with AI assistant'],
-    detailedFeedback: 'Public AI chatbots and many external assistants process data on external servers and may not guarantee confidentiality. Sharing company secrets through these platforms poses a significant security risk. Even "secure" or "temporary chat" assistants might not comply with our specific data handling protocols for highly sensitive information. The safest approach, according to policy for such confidential data, is not to use an AI assistant unless it is explicitly approved and vetted for this level of data sensitivity.',
+    correctAnswer: 'Seek sign-off from the relevant Project Director',
+    approvedAnswers: ['Seek sign-off from the relevant Project Director'],
+    detailedFeedback: 'Staff should always seek sign-off in case of doubt.',
     voiceoverUrl: '/audio/4.mp3',
   },
   {
     id: 'q5',
-    text: 'What is your responsibility, {{playerName}}, regarding the accuracy of AI-generated content before using it for official company purposes?',
+    text: 'Who must approve the use of generative AI on projects involving client data?',
     questionType: 'multiple-choice',
     options: [
-        'Assume it is always accurate.',
-        'Only check for grammatical errors.',
-        'Verify its accuracy and appropriateness thoroughly, as per our guidelines.',
-        'It is the AI provider\'s responsibility.'
+        'The project manager',
+        'The IT team',
+        'The signatory of the client contract (Associate Director or Director)',
+        'Any Associate'
     ],
-    correctAnswer: 'Verify its accuracy and appropriateness thoroughly, as per our guidelines.',
-    approvedAnswers: ['Verify its accuracy and appropriateness thoroughly, as per our guidelines.'],
-    detailedFeedback: 'AI-generated content can sometimes be inaccurate or inappropriate. It\'s your responsibility to critically review and validate any AI output before using it in an official capacity here to ensure quality and correctness.',
+    correctAnswer: 'The signatory of the client contract (Associate Director or Director)',
+    approvedAnswers: ['The signatory of the client contract (Associate Director or Director)'],
+    detailedFeedback: 'Only the Associate Director or Director who signed the client contract may approve AI use in such contexts.',
     voiceoverUrl: '/audio/5.mp3',
   },
   {
     id: 'q6',
-    text: 'Does our AI policy allow using AI to generate content that might infringe on copyrights?',
+    text: '{{playerName}}, which of the following is not a permitted use of generative AI without specific sign-off?',
     questionType: 'multiple-choice',
     options: [
-        'Yes, if the AI tool says it\'s okay.',
-        'No, creating content that infringes on IP rights is prohibited under our policy.',
-        'Only for internal drafts, not for public release.',
-        'If you cite the AI as a source, it\'s fine.'
+        'Generating marketing headlines for internal campaigns',
+        'Drafting and reviewing client reports',
+        'Creating generic training materials',
+        'Brainstorming team name ideas'
     ],
-    correctAnswer: 'No, creating content that infringes on IP rights is prohibited under our policy.',
-    approvedAnswers: ['No, creating content that infringes on IP rights is prohibited under our policy.'],
-    detailedFeedback: 'We place paramount importance on respecting intellectual property. Our policy prohibits using AI to create or distribute content that violates copyright laws or infringes on the rights of others.',
+    correctAnswer: 'Drafting and reviewing client reports',
+    approvedAnswers: ['Drafting and reviewing client reports'],
+    detailedFeedback: 'Drafting or reviewing client reports requires explicit sign-off due to potential exposure to sensitive data.',
     voiceoverUrl: '/audio/6.mp3',
   },
   {
     id: 'q7',
-    text: 'When using an AI tool for a significant project here, should you document its use?',
+    text: 'Which of the following are examples of prohibited or high-risk uses of generative AI?',
     questionType: 'multiple-choice',
     options: [
-        'No, it\'s not necessary.',
-        'Yes, to ensure transparency and for future reference, as outlined in our AI policy.',
-        'Only if the project fails.',
-        'Documentation is only for human-created work.'
+        'Data analysis on anonymised, internal practice datasets',
+        'Writing code snippets from scratch',
+        'Use on client datasets containing personally identifiable information',
+        'Generating meeting agenda templates'
     ],
-    correctAnswer: 'Yes, to ensure transparency and for future reference, as outlined in our AI policy.',
-    approvedAnswers: ['Yes, to ensure transparency and for future reference, as outlined in our AI policy.'],
-    detailedFeedback: 'Documenting the use of AI tools in our projects helps maintain transparency, allows for auditing, and provides a record for future reference, especially if questions arise about the process or outcomes.',
+    correctAnswer: 'Use on client datasets containing personally identifiable information',
+    approvedAnswers: ['Use on client datasets containing personally identifiable information'],
+    detailedFeedback: 'Using generative AI on PII (personally identifiable information)-containing datasets is explicitly prohibited.',
     voiceoverUrl: '/audio/7.mp3',
   },
   {
-    id: 'q8',
-    text: 'What is our stance on using AI for employee performance evaluation as the SOLE determinant?',
-    questionType: 'multiple-choice',
-    options: [
-        'It is encouraged for efficiency.',
-        'It is allowed if employees consent.',
-        'It is generally not allowed due to bias and lack of human oversight, as per our policy.',
-        'It is mandatory for all performance reviews.'
-    ],
-    correctAnswer: 'It is generally not allowed due to bias and lack of human oversight, as per our policy.',
-    approvedAnswers: ['It is generally not allowed due to bias and lack of human oversight, as per our policy.'],
-    detailedFeedback: 'While AI can assist in evaluations, relying solely on AI can introduce bias and lacks the nuanced understanding a human manager provides. Our policy emphasises human oversight in such critical decisions.',
-    voiceoverUrl: '/audio/8.mp3',
+      id: 'q8',
+      text: 'Which of the following are key risks that occur when using generative AI, that must be accounted for through best practice?',
+      questionType: 'multi-select', // Changed to multi-select
+      options: [
+          'Hallucinations',
+          'Copyright infringement',
+          'Client feedback delays',
+          'Unreliable analysis or code output'
+      ],
+      correctAnswer: ['Hallucinations', 'Copyright infringement', 'Unreliable analysis or code output'], // Updated to an array of correct answers
+      approvedAnswers: [['Hallucinations', 'Copyright infringement', 'Unreliable analysis or code output']], // Updated to an array of array of approved answers
+      detailedFeedback: 'These are the critical risks highlighted in the policy. Client feedback delays are not mentioned as an AI-specific risk.',
+      voiceoverUrl: '/audio/8.mp3',
   },
   {
     id: 'q9',
-    text: `Team,
-
-I've just found this great new AI tool called 'InnovateAI Pro' that I think could massively help with our current market research project. It claims to analyse competitor data and generate insights much faster than our current methods. I'm keen to get started with it.
----
-{{playerName}}, what is the correct first step you should take with 'InnovateAI Pro' according to our company's AI policy?`,
-    questionType: 'scenario-buttons',
+    text: 'What is the primary risk when Generative AI produces "hallucinations"?',
+    questionType: 'multiple-choice',
     options: [
-        'Start using it immediately for all tasks.',
-        'Purchase a subscription for the whole team.',
-        'Propose the tool for review through our approved channels.',
-        'Only use it for personal, non-sensitive tasks.'
+        'It consumes excessive computing resources',
+        'It produces outdated information only',
+        'It outputs plausible but incorrect content, including invented sources',
+        'It creates content that is difficult for AI systems to process'
     ],
-    correctAnswer: 'Propose the tool for review through our approved channels.',
-    approvedAnswers: ['Propose the tool for review through our approved channels.'],
-    detailedFeedback: 'To ensure security, compliance, and proper integration within the company, new AI tools must undergo a review process. Proposing it through official channels allows for evaluation before widespread adoption.',
+    correctAnswer: 'It outputs plausible but incorrect content, including invented sources',
+    approvedAnswers: ['It outputs plausible but incorrect content, including invented sources'],
+    detailedFeedback: 'Do not provide Generative AI output directly to clients without human review – including checking of sources, and having a subject-matter-expert review the content.',
     voiceoverUrl: '/audio/9.mp3',
   }
+  {
+  id: 'q10',
+  text: 'How should Generative AI outputs be handled before being shared with clients, {{playerName}}?',
+  questionType: 'multiple-choice',
+  options: [
+      'Shared without edits to maintain authenticity',
+      'Used only if approved by legal teams',
+      'Reviewed by a human, including source checks and subject-matter-expert input',
+      'Sent alongside a disclaimer written by the AI'
+  ],
+  correctAnswer: 'Reviewed by a human, including source checks and subject-matter-expert input',
+  approvedAnswers: ['Reviewed by a human, including source checks and subject-matter-expert input'],
+  detailedFeedback: 'Always ensure AI outputs are reviewed by a human and verified for accuracy before sharing with clients.',
+  voiceoverUrl: '/audio/10.mp3',
+}
+  {
+  id: 'q11',
+  text: 'To mitigate copyright infringement in AI-generated output, what should you do?',
+  questionType: 'multiple-choice',
+  options: [
+      'Only use content generated after 2023',
+      'Check if any verbatim quotes need sourcing',
+      'Avoid using any AI-generated content in external documents',
+      'Use only open-source AI tools'
+  ],
+  correctAnswer: 'Check if any verbatim quotes need sourcing',
+  approvedAnswers: ['Check if any verbatim quotes need sourcing'],
+  detailedFeedback: 'Check and properly source any verbatim content in AI outputs to avoid copyright issues.',
+  voiceoverUrl: '/audio/11.mp3',
+}
+  {
+  id: 'q12',
+  text: 'What is a key requirement when using AI to produce code or quantitative analysis?',
+  questionType: 'multiple-choice',
+  options: [
+      'Subject the output to the same scrutiny as human-written code',
+      'Allow the AI to self-correct based on outcomes',
+      'Use code only in non-critical systems',
+      'Skip peer review if unit tests pass'
+  ],
+  correctAnswer: 'Subject the output to the same scrutiny as human-written code',
+  approvedAnswers: ['Subject the output to the same scrutiny as human-written code'],
+  detailedFeedback: 'AI-generated code must be reviewed and tested with the same rigour as human-written code.',
+  voiceoverUrl: '/audio/12.mp3',
+}
+  {
+  id: 'q13',
+  text: 'Last question {{playerName}}! The approved AI tools ChatGpt Enterprise or GitHub CoPilot may be used for all Frontier work (whether internal or using client data) unless:',
+  questionType: 'multiple-choice',
+  options: [
+      'A Director or Associate Director has explicitly restricted the use',
+      'Personal AI Tools are available',
+      'A new AI tool has been launched and recommended externally',
+      'A client has suggested a new tool they heard is fit for purpose'
+  ],
+  correctAnswer: 'A Director or Associate Director has explicitly restricted the use',
+  approvedAnswers: ['A Director or Associate Director has explicitly restricted the use'],
+  detailedFeedback: 'Use approved AI tools unless explicitly restricted by a Director or Associate Director.',
+  voiceoverUrl: '/audio/13.mp3',
+}
 ];

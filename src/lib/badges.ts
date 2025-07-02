@@ -20,7 +20,7 @@ export const badgeDefinitions: Badge[] = [
     name: 'Ethical AI Advocate',
     description: 'Understands the importance of reporting bias and ethical AI use.',
     icon: 'Scale' as BadgeIconName,
-    questionIds: ['q3', 'q8'],
+    questionIds: ['q3', 'q8', 'q10'],
   },
   {
     id: 'ip-guardian',
@@ -34,6 +34,6 @@ export const badgeDefinitions: Badge[] = [
     name: 'AI Tool SME',
     description: 'Proficient in AI tool usage, verification, and company processes.',
     icon: 'Settings2' as BadgeIconName,
-    questionIds: ['q5', 'q7', 'q9'],
+    questionIds: ['q5', 'q7', 'q9', 'q11', 'q12', 'q13'],
   },
 ];
