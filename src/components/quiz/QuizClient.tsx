@@ -30,6 +30,7 @@ const QuizClient: React.FC = () => {
   const [quizSummaryText, setQuizSummaryText] = useState<string>('');
   const [score, setScore] = useState(0);
   const [streak, setStreak] = useState(0);
+  const [hasUsedGlobalHint, setHasUsedGlobalHint] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [confettiSuccess, setConfettiSuccess] = useState(false);
   const [earnedBadges, setEarnedBadges] = useState<Badge[]>([]);
@@ -77,6 +78,7 @@ const QuizClient: React.FC = () => {
     setQuizSummaryText('');
     setScore(0);
     setStreak(0);
+    setHasUsedGlobalHint(false);
     setShowConfetti(false);
     setSelectedThemeColor(null);
     setSelectedThemeForegroundColor(null);
@@ -114,6 +116,7 @@ const QuizClient: React.FC = () => {
     setQuizSummaryText('');
     setScore(0);
     setStreak(0);
+    setHasUsedGlobalHint(false);
     setShowConfetti(false);
     setLeaderboardData([]);
 
@@ -163,6 +166,7 @@ const QuizClient: React.FC = () => {
   };
 
   const handleGetHint = async (questionId: string) => {
+    if (hasUsedGlobalHint) return;
     if (hints[questionId]) return;
     setIsLoadingHint(true);
     try {
@@ -173,6 +177,8 @@ const QuizClient: React.FC = () => {
       const result = await generateHint({ question: originalQuestionText.replace(/{{playerName}}/g, playerName.split(' ')[0] || 'User'), approvedAnswers: question.approvedAnswers });
       setHints(prev => ({ ...prev, [questionId]: { text: result.hint } }));
       
+      setHasUsedGlobalHint(true);
+
       setUserAnswers(prev => {
         const currentAnswerState = prev[questionId] || { answer: '', isEvaluated: false };
         return {
@@ -220,9 +226,8 @@ const QuizClient: React.FC = () => {
     await new Promise(resolve => setTimeout(resolve, 100)); 
 
     if (isCorrect) {
-      const hintWasUsed = userAnswers[questionId]?.hintUsed || false;
-      const basePoints = hintWasUsed ? 50 : 100;
-      const streakBonus = streak * 10; // +10 points for every question in the current streak
+      const basePoints = 100;
+      const streakBonus = streak * 10;
       const pointsAwarded = basePoints + streakBonus;
       
       setScore(s => s + pointsAwarded);
@@ -355,6 +360,7 @@ const QuizClient: React.FC = () => {
             isLoadingEvaluation={isLoadingEvaluation}
             isEvaluated={userAnswers[questionForDisplay.id]?.isEvaluated || false}
             hintUsedThisQuestion={userAnswers[questionForDisplay.id]?.hintUsed || false}
+            hasUsedGlobalHint={hasUsedGlobalHint}
             onNextQuestion={handleNextQuestion}
             isLastQuestion={currentQuestionIndex === currentQuestions.length - 1}
             onFinishQuiz={finishQuiz}

@@ -29,6 +29,7 @@ interface QuestionCardProps {
   isLoadingEvaluation: boolean;
   isEvaluated: boolean;
   hintUsedThisQuestion: boolean;
+  hasUsedGlobalHint: boolean;
   onNextQuestion: () => void;
   isLastQuestion: boolean;
   onFinishQuiz: () => void;
@@ -51,6 +52,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
   isLoadingEvaluation,
   isEvaluated,
   hintUsedThisQuestion,
+  hasUsedGlobalHint,
   onNextQuestion,
   isLastQuestion,
   onFinishQuiz,
@@ -294,7 +296,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
          <Button 
             variant="ghost" 
             onClick={handleGetHint}
-            disabled={isLoadingHint || isEvaluated || hintUsedThisQuestion}
+            disabled={isLoadingHint || isEvaluated || hasUsedGlobalHint}
             aria-label="Get a hint"
             className="text-foreground hover:text-foreground hover:bg-transparent flex items-center space-x-2 group p-0"
           >
