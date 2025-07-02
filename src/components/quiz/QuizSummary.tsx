@@ -1,7 +1,7 @@
 
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Download, BarChart3, Award as AwardIcon, ShieldCheck, Scale, Copyright, Settings2, Zap } from 'lucide-react';
@@ -40,6 +40,10 @@ const QuizSummary: React.FC<QuizSummaryProps> = ({
   currentPlayer,
   leaderboardData 
 }) => {
+    useEffect(() => {
+      window.parent.postMessage('complete', '*');
+    }, []);
+
   const getAvatarUrl = (avatarId?: string) => {
     const avatar = avatarOptions.find(opt => opt.id === avatarId);
     return avatar ? avatar.url : 'https://placehold.co/64x64/ccc/FFFFFF.png?text=?'; 
