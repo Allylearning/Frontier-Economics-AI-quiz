@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -42,22 +43,21 @@ const prompt = ai.definePrompt({
   input: {schema: GenerateQuizSummaryInputSchema},
   output: {schema: GenerateQuizSummaryOutputSchema},
   prompt: `You are an AI policy expert providing a summary of a quiz on our AI policy. A user, {{quizTaker}}, has just completed this quiz.
-They scored {{overallScore}} out of {{totalQuestions}}.
+They scored {{overallScore}}.
 Ensure all generated text is in formal UK English.
 
-{{#if incorrectAttempts.length}}
-Your summary should focus on the areas where {{quizTaker}} made mistakes. For each incorrect answer, explain the core principle of our policy they might have missed, referencing the provided feedback, and guide them towards better understanding.
+{{#if incorrectAttempts}}
+Your summary should focus on the areas where {{quizTaker}} made mistakes. For each incorrect answer, explain the core principle of our policy they might have missed, using the provided policy detail. The tone should be encouraging and constructive.
 
 Here are the questions {{quizTaker}} answered incorrectly:
 {{#each incorrectAttempts}}
-- Question: "{{questionText}}"
-  User's Answer: "{{userAnswer}}"
-  Correct Answer: "{{correctAnswer}}"
-  Relevant Policy Detail: "{{detailedFeedback}}"
+- Regarding the question "{{questionText}}", your answer was "{{userAnswer}}".
+  The correct policy principle is: "{{detailedFeedback}}"
 {{/each}}
-Please provide targeted advice based on these. Keep the summary encouraging and constructive.
+
+To reinforce your understanding, we recommend reviewing our AI policy document.
 {{else}}
-Congratulations, {{quizTaker}}! You answered all questions correctly. You have demonstrated a strong understanding of our AI policy. Keep up the great work and continue to apply these principles.
+Congratulations, {{quizTaker}}! You have answered all questions correctly and demonstrated a strong understanding of our AI policy. Keep up the great work and continue to apply these principles.
 {{/if}}
 
 The summary should be concise and easy-to-digest.
