@@ -78,7 +78,7 @@ const QuizSummary: React.FC<QuizSummaryProps> = ({
             Restart Quiz
           </Button>
           <a
-            href="/placeholder-ai-policy.pdf"
+            href="/public/docs/Frontier%20Generative%20AI%20Policy%20v2.0.pdf"
             download="AI-Policy.pdf"
             target="_blank"
             rel="noopener noreferrer"
