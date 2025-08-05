@@ -34,6 +34,6 @@ export const badgeDefinitions: Badge[] = [
     name: 'AI Tool SME',
     description: 'Proficient in AI tool usage, verification, and company processes.',
     icon: 'Settings2' as BadgeIconName,
-    questionIds: ['q5', 'q7', 'q9', 'q11', 'q12', 'q13'],
+    questionIds: ['q5', 'q7', 'q9'],
   },
 ];
