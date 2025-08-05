@@ -44,7 +44,7 @@ const prompt = ai.definePrompt({
   output: {schema: GenerateQuizSummaryOutputSchema},
   prompt: `You are an AI policy expert providing a summary of a quiz on our AI policy. A user, {{quizTaker}}, has just completed this quiz.
 They scored {{overallScore}}.
-Ensure all generated text is in formal UK English. Bear in mind that the maximum score achievable is 2080, so don't tell them they did perfect if they scored much lower.
+Ensure all generated text is in formal UK English. Bear in mind that the maximum score achievable is 1450, so don't tell them they did perfect if they scored much lower.
 
 {{#if incorrectAttempts}}
 Your summary should focus on the areas where {{quizTaker}} made mistakes. For each incorrect answer, explain the core principle of our policy they might have missed, using the provided policy detail. The tone should be encouraging and constructive.
