@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
@@ -65,44 +66,6 @@ const QuizClient: React.FC = () => {
     }
   }, [selectedThemeColor, selectedThemeForegroundColor]);
   
-  const resetForNewPlayer = useCallback(() => {
-    setQuizState('idle');
-    setCurrentQuestions([]);
-    setCurrentQuestionIndex(0);
-    setUserAnswers({});
-    setHints({});
-    setEarnedBadges([]);
-    setIsLoadingHint(false);
-    setIsLoadingEvaluation(false);
-    setIsLoadingSummary(false);
-    setQuizSummaryText('');
-    setScore(0);
-    setStreak(0);
-    setHasUsedGlobalHint(false);
-    setShowConfetti(false);
-    setSelectedThemeColor(null);
-    setSelectedThemeForegroundColor(null);
-    setLeaderboardData([]);
-    setCorrectAnswersCount(0);
-    setPlayerName('');
-    setAvatarId('');
-  }, []);
-
-  const restartQuizForCurrentPlayer = useCallback(() => {
-    if (!playerName || !avatarId || !selectedThemeColor || !selectedThemeForegroundColor) {
-      resetForNewPlayer();
-      return;
-    }
-
-    startQuiz({
-      numQuestions: questionPool.length,
-      playerName,
-      avatarId,
-      accentColor: selectedThemeColor,
-      accentForegroundColor: selectedThemeForegroundColor
-    });
-  }, [playerName, avatarId, selectedThemeColor, selectedThemeForegroundColor, resetForNewPlayer]);
-
   const startQuiz = useCallback(({ 
     numQuestions, 
     playerName: name, 
@@ -157,6 +120,44 @@ const QuizClient: React.FC = () => {
 
     setQuizState('active');
   }, []);
+
+  const resetForNewPlayer = useCallback(() => {
+    setQuizState('idle');
+    setCurrentQuestions([]);
+    setCurrentQuestionIndex(0);
+    setUserAnswers({});
+    setHints({});
+    setEarnedBadges([]);
+    setIsLoadingHint(false);
+    setIsLoadingEvaluation(false);
+    setIsLoadingSummary(false);
+    setQuizSummaryText('');
+    setScore(0);
+    setStreak(0);
+    setHasUsedGlobalHint(false);
+    setShowConfetti(false);
+    setSelectedThemeColor(null);
+    setSelectedThemeForegroundColor(null);
+    setLeaderboardData([]);
+    setCorrectAnswersCount(0);
+    setPlayerName('');
+    setAvatarId('');
+  }, []);
+
+  const restartQuizForCurrentPlayer = useCallback(() => {
+    if (!playerName || !avatarId || !selectedThemeColor || !selectedThemeForegroundColor) {
+      resetForNewPlayer();
+      return;
+    }
+
+    startQuiz({
+      numQuestions: questionPool.length,
+      playerName,
+      avatarId,
+      accentColor: selectedThemeColor,
+      accentForegroundColor: selectedThemeForegroundColor
+    });
+  }, [playerName, avatarId, selectedThemeColor, selectedThemeForegroundColor, resetForNewPlayer, startQuiz]);
 
   const handleAnswerChange = (questionId: string, changedAnswer: string) => {
     const question = currentQuestions.find(q => q.id === questionId);
@@ -401,7 +402,6 @@ const QuizClient: React.FC = () => {
             score={score}
             earnedBadges={earnedBadges}
             onRestartQuiz={restartQuizForCurrentPlayer}
-            onChangePlayer={resetForNewPlayer}
             currentPlayer={{ name: playerName, score, date: new Date().toLocaleDateString(), avatarId }}
             leaderboardData={leaderboardData}
             correctAnswersCount={correctAnswersCount}
@@ -414,3 +414,5 @@ const QuizClient: React.FC = () => {
 };
 
 export default QuizClient;
+
+    

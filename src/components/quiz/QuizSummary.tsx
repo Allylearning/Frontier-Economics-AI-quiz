@@ -17,7 +17,6 @@ interface QuizSummaryProps {
   score: number;
   earnedBadges: Badge[];
   onRestartQuiz: () => void;
-  onChangePlayer: () => void;
   currentPlayer: Omit<LeaderboardEntry, 'id'>; 
   leaderboardData: LeaderboardEntry[];
   correctAnswersCount: number;
@@ -39,7 +38,6 @@ const QuizSummary: React.FC<QuizSummaryProps> = ({
   score, 
   earnedBadges, 
   onRestartQuiz, 
-  onChangePlayer,
   currentPlayer,
   leaderboardData,
   correctAnswersCount,
@@ -82,9 +80,6 @@ const QuizSummary: React.FC<QuizSummaryProps> = ({
         <CardFooter className="flex flex-col sm:flex-row justify-center items-center gap-4 pt-2">
           <Button onClick={onRestartQuiz}>
             <RotateCw className="mr-2 h-4 w-4" /> Try Again
-          </Button>
-          <Button onClick={onChangePlayer} variant="outline">
-            Change Player
           </Button>
           <a
             href="/placeholder-ai-policy.pdf"
