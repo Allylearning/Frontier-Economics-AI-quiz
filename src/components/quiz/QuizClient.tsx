@@ -291,26 +291,11 @@ const QuizClient: React.FC = () => {
       }
     }
 
-    const newEarnedBadges: Badge[] = [];
-    const perfectScore = finalCorrectAnswersCount === currentQuestions.length;
-    const noHintsUsed = !Object.values(userAnswers).some(a => a.hintUsed);
-
-    if(perfectScore) {
-        newEarnedBadges.push(badgeDefinitions.find(b => b.id === 'policy-ace')!);
-    }
-    if(noHintsUsed) {
-        newEarnedBadges.push(badgeDefinitions.find(b => b.id === 'self-sufficient-scholar')!);
-    }
-
-    badgeDefinitions.forEach(badge => {
-      if (badge.id === 'policy-ace' || badge.id === 'self-sufficient-scholar') return;
-      const allCriteriaMet = badge.questionIds.every(qId => {
+    const newEarnedBadges: Badge[] = badgeDefinitions.filter(badge => {
+      return badge.questionIds.every(qId => {
         const uAnswer = userAnswers[qId];
         return uAnswer?.evaluation?.isCorrect === true;
       });
-      if (allCriteriaMet) {
-        newEarnedBadges.push(badge);
-      }
     });
     setEarnedBadges(newEarnedBadges);
 
