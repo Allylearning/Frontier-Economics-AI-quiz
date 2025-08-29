@@ -82,7 +82,7 @@ const QuizSummary: React.FC<QuizSummaryProps> = ({
             <RotateCw className="mr-2 h-4 w-4" /> Try Again
           </Button>
           <a
-            href="/placeholder-ai-policy.pdf"
+            href="/docs/Frontier%20Generative%20AI%20Policy%20v2.0.pdf"
             download="AI-Policy.pdf"
             target="_blank"
             rel="noopener noreferrer"
