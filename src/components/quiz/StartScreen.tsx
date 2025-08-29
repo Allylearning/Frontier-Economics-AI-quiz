@@ -57,8 +57,8 @@ const StartScreen: React.FC<StartScreenProps> = ({ onStartQuiz, totalQuestionsIn
     <Card className="w-full max-w-lg shadow-xl h-fit self-center">
       <CardHeader className="text-center pt-4 pb-2">
         <CardTitle className="text-3xl font-headline">AI Policy Awareness Assessment</CardTitle>
-        <CardDescription className="text-lg mt-1">
-          Test your knowledge of our company's AI policy.
+        <CardDescription className="text-base mt-2 px-4">
+          Test your knowledge of our company's AI policy. You must answer at least 8 questions correctly to pass.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-3 p-4">

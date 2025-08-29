@@ -4,9 +4,9 @@ export const badgeDefinitions: Badge[] = [
   {
     id: 'policy-foundations',
     name: 'Policy Foundations Expert',
-    description: 'Demonstrated understanding of the core purpose of the AI policy.',
+    description: 'Demonstrated complete understanding of the purpose of the AI policy.',
     icon: 'Award' as BadgeIconName,
-    questionIds: ['q1'],
+    questionIds: ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10'],
   },
   {
     id: 'data-security-steward',

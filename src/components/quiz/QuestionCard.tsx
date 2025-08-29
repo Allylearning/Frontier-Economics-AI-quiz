@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
@@ -231,6 +230,8 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
     }
   };
 
+  const streakBonusDisplay = streak > 1 && evaluation?.isCorrect;
+
   return (
     <Card className="w-full shadow-lg">
       <CardHeader>
@@ -272,7 +273,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
             </AlertTitle>
             <AlertDescription>
               {evaluation.feedback}
-              {evaluation.isCorrect && streak > 1 && (
+              {streakBonusDisplay && (
                 <p className="mt-2 font-semibold text-orange-500">{streak}x Streak Bonus!</p>
               )}
               {!evaluation.isCorrect && question.correctAnswer && question.questionType !== 'multi-select' && (
@@ -303,7 +304,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
             <div className="p-0.5 border-2 border-transparent group-hover:border-[#6e6eff] rounded-full transition-all">
               <Image src="/images/AI Avatar.svg" alt="AI Hint Avatar" width={40} height={40} className="rounded-full" />
             </div>
-            <span>{isLoadingHint ? 'Getting Hint...' : hintUsedThisQuestion ? 'Hint Used' : 'Get Hint'}</span>
+            <span>{isLoadingHint ? 'Getting Hint...' : hintUsedThisQuestion ? 'Hint Used' : hasUsedGlobalHint ? 'Hint Already Used' : 'Get Hint'}</span>
           </Button>
         
         {isEvaluated ? (

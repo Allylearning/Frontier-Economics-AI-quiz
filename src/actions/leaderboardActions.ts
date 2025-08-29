@@ -11,10 +11,12 @@ export async function savePlayerScore(playerData: {
   avatarId?: string;
 }): Promise<void> {
   try {
+    const existingEntry = await prisma.leaderboardEntry.findUnique({ where: { name: playerData.name } });
+
     await prisma.leaderboardEntry.upsert({
       where: { name: playerData.name },
       update: {
-        score: Math.max(playerData.score, (await prisma.leaderboardEntry.findUnique({ where: { name: playerData.name } }))?.score || 0),
+        score: Math.max(playerData.score, existingEntry?.score || 0),
         avatarId: playerData.avatarId,
         // date is automatically updated by @updatedAt
       },
@@ -31,18 +33,38 @@ export async function savePlayerScore(playerData: {
   }
 }
 
-export async function getLeaderboard(): Promise<LeaderboardEntry[]> {
+export async function getLeaderboard(currentPlayerName?: string): Promise<LeaderboardEntry[]> {
   try {
-    const entries = await prisma.leaderboardEntry.findMany({
+    const topEntries = await prisma.leaderboardEntry.findMany({
       take: LEADERBOARD_LIMIT,
       orderBy: {
         score: 'desc',
       },
     });
+
+    let entries = topEntries;
+    
+    if (currentPlayerName) {
+      const currentPlayerInTop = topEntries.some(entry => entry.name === currentPlayerName);
+      
+      if (!currentPlayerInTop) {
+        const currentPlayerEntry = await prisma.leaderboardEntry.findUnique({
+          where: { name: currentPlayerName },
+        });
+
+        if (currentPlayerEntry) {
+          // To maintain a semblance of order, we could fetch players around the user,
+          // but for simplicity and performance, we'll just add the user to the list
+          // and re-sort. The UI will highlight them.
+          entries = [...topEntries, currentPlayerEntry].sort((a, b) => b.score - a.score);
+        }
+      }
+    }
+
     // Convert Date objects to string to ensure serializability for client components
     return entries.map(entry => ({
       ...entry,
-      date: entry.date.toLocaleDateString(), 
+      date: entry.date.toLocaleDateString(),
     }));
   } catch (error) {
     console.error('Failed to fetch leaderboard:', error);

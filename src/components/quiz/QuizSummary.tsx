@@ -1,10 +1,9 @@
-
 'use client';
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Download, BarChart3, Award as AwardIcon, ShieldCheck, Scale, Copyright, Settings2, Zap } from 'lucide-react';
+import { Download, BarChart3, Award as AwardIcon, ShieldCheck, Scale, Copyright, Settings2, Zap, RotateCw } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import type { LeaderboardEntry, Badge, BadgeIconName } from '@/types';
 import type { LucideProps } from 'lucide-react';
@@ -18,8 +17,11 @@ interface QuizSummaryProps {
   score: number;
   earnedBadges: Badge[];
   onRestartQuiz: () => void;
+  onChangePlayer: () => void;
   currentPlayer: Omit<LeaderboardEntry, 'id'>; 
   leaderboardData: LeaderboardEntry[];
+  correctAnswersCount: number;
+  totalQuestions: number;
 }
 
 const iconMap: Record<BadgeIconName, FunctionComponent<LucideProps>> = {
@@ -37,19 +39,19 @@ const QuizSummary: React.FC<QuizSummaryProps> = ({
   score, 
   earnedBadges, 
   onRestartQuiz, 
+  onChangePlayer,
   currentPlayer,
-  leaderboardData 
+  leaderboardData,
+  correctAnswersCount,
+  totalQuestions
 }) => {
-    useEffect(() => {
-      window.parent.postMessage('complete', '*');
-    }, []);
-
   const getAvatarUrl = (avatarId?: string) => {
     const avatar = avatarOptions.find(opt => opt.id === avatarId);
     return avatar ? avatar.url : 'https://placehold.co/64x64/ccc/FFFFFF.png?text=?'; 
   };
 
   const playerAvatarUrl = getAvatarUrl(currentPlayer.avatarId);
+  const passedQuiz = correctAnswersCount >= 8;
 
   return (
     <div className="space-y-8 w-full max-w-3xl">
@@ -66,19 +68,26 @@ const QuizSummary: React.FC<QuizSummaryProps> = ({
           </div>
           <CardTitle className="text-3xl font-headline">Quiz Completed, {currentPlayer.name}!</CardTitle>
           <CardDescription className="text-lg">
-            You scored {score} points!
+            You scored {score}.
+          </CardDescription>
+          <CardDescription className="text-base mt-2">
+            You answered {correctAnswersCount} out of {totalQuestions} questions correctly.
+            {passedQuiz ? (
+              <span className="block text-green-500 font-semibold mt-1">Congratulations, you have passed!</span>
+            ) : (
+              <span className="block text-red-500 font-semibold mt-1">You need at least 8 correct answers to pass. Please try again.</span>
+            )}
           </CardDescription>
         </CardHeader>
         <CardFooter className="flex flex-col sm:flex-row justify-center items-center gap-4 pt-2">
-          <Button 
-            onClick={onRestartQuiz} 
-            variant="outline"
-            className="bg-card text-card-foreground hover:bg-secondary hover:text-secondary-foreground"
-          >
-            Restart Quiz
+          <Button onClick={onRestartQuiz}>
+            <RotateCw className="mr-2 h-4 w-4" /> Try Again
+          </Button>
+          <Button onClick={onChangePlayer} variant="outline">
+            Change Player
           </Button>
           <a
-            href="/docs/Frontier%20Generative%20AI%20Policy%20v2.0.pdf"
+            href="/placeholder-ai-policy.pdf"
             download="AI-Policy.pdf"
             target="_blank"
             rel="noopener noreferrer"
@@ -111,7 +120,7 @@ const QuizSummary: React.FC<QuizSummaryProps> = ({
               </TableHeader>
               <TableBody>
                 {leaderboardData.map((entry, index) => (
-                  <TableRow key={entry.id} className={entry.name === currentPlayer.name && entry.score === currentPlayer.score ? "bg-primary/10" : ""}>
+                  <TableRow key={entry.id || entry.name} className={entry.name === currentPlayer.name ? "bg-primary/10" : ""}>
                     <TableCell className="font-medium">{index + 1}</TableCell>
                     <TableCell>
                       <Image src={getAvatarUrl(entry.avatarId)} alt={`${entry.name}'s avatar`} width={32} height={32} className="rounded-full" />

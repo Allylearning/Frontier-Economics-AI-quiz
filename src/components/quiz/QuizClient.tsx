@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
@@ -39,6 +38,7 @@ const QuizClient: React.FC = () => {
   const [selectedThemeColor, setSelectedThemeColor] = useState<string | null>(null);
   const [selectedThemeForegroundColor, setSelectedThemeForegroundColor] = useState<string | null>(null);
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>([]);
+  const [correctAnswersCount, setCorrectAnswersCount] = useState(0);
 
 
   const { toast } = useToast();
@@ -64,8 +64,8 @@ const QuizClient: React.FC = () => {
       root.style.removeProperty('--chart-2');
     }
   }, [selectedThemeColor, selectedThemeForegroundColor]);
-
-  const resetQuizState = useCallback(() => {
+  
+  const resetForNewPlayer = useCallback(() => {
     setQuizState('idle');
     setCurrentQuestions([]);
     setCurrentQuestionIndex(0);
@@ -83,8 +83,25 @@ const QuizClient: React.FC = () => {
     setSelectedThemeColor(null);
     setSelectedThemeForegroundColor(null);
     setLeaderboardData([]);
-    
+    setCorrectAnswersCount(0);
+    setPlayerName('');
+    setAvatarId('');
   }, []);
+
+  const restartQuizForCurrentPlayer = useCallback(() => {
+    if (!playerName || !avatarId || !selectedThemeColor || !selectedThemeForegroundColor) {
+      resetForNewPlayer();
+      return;
+    }
+
+    startQuiz({
+      numQuestions: questionPool.length,
+      playerName,
+      avatarId,
+      accentColor: selectedThemeColor,
+      accentForegroundColor: selectedThemeForegroundColor
+    });
+  }, [playerName, avatarId, selectedThemeColor, selectedThemeForegroundColor, resetForNewPlayer]);
 
   const startQuiz = useCallback(({ 
     numQuestions, 
@@ -104,7 +121,6 @@ const QuizClient: React.FC = () => {
     setSelectedThemeColor(accentColor);
     setSelectedThemeForegroundColor(accentForegroundColor);
 
-    setQuizState('idle'); 
     setCurrentQuestions([]);
     setCurrentQuestionIndex(0);
     setUserAnswers({});
@@ -119,6 +135,7 @@ const QuizClient: React.FC = () => {
     setHasUsedGlobalHint(false);
     setShowConfetti(false);
     setLeaderboardData([]);
+    setCorrectAnswersCount(0);
 
     let selectedQuestions: QuizQuestion[];
     if (numQuestions >= questionPool.length) {
@@ -227,11 +244,12 @@ const QuizClient: React.FC = () => {
 
     if (isCorrect) {
       const basePoints = 100;
-      const streakBonus = streak * 10;
+      const newStreak = streak + 1;
+      const streakBonus = (newStreak > 1) ? (newStreak -1) * 10 : 0;
       const pointsAwarded = basePoints + streakBonus;
       
       setScore(s => s + pointsAwarded);
-      setStreak(s => s + 1);
+      setStreak(newStreak);
       evaluationResult.pointsAwarded = pointsAwarded;
     } else {
       setStreak(0);
@@ -255,8 +273,9 @@ const QuizClient: React.FC = () => {
     setQuizState('finished');
     setIsLoadingSummary(true);
     
-    const possibleScore = currentQuestions.length * 100;
-    const pass = score / possibleScore >= 0.7;
+    const finalCorrectAnswersCount = currentQuestions.filter(q => userAnswers[q.id]?.evaluation?.isCorrect).length;
+    setCorrectAnswersCount(finalCorrectAnswersCount);
+    const pass = finalCorrectAnswersCount >= 8;
 
     setConfettiSuccess(pass);
     setShowConfetti(true);
@@ -296,7 +315,7 @@ const QuizClient: React.FC = () => {
     
     try {
       await savePlayerScore({ name: playerName, score, avatarId });
-      const fetchedLeaderboard = await getLeaderboard();
+      const fetchedLeaderboard = await getLeaderboard(playerName);
       setLeaderboardData(fetchedLeaderboard);
 
       const summaryResult = await generateQuizSummary({
@@ -381,13 +400,12 @@ const QuizClient: React.FC = () => {
             summaryText={quizSummaryText}
             score={score}
             earnedBadges={earnedBadges}
-            onRestartQuiz={() => { 
-                setPlayerName(''); 
-                setAvatarId('');
-                resetQuizState();
-            }}
+            onRestartQuiz={restartQuizForCurrentPlayer}
+            onChangePlayer={resetForNewPlayer}
             currentPlayer={{ name: playerName, score, date: new Date().toLocaleDateString(), avatarId }}
             leaderboardData={leaderboardData}
+            correctAnswersCount={correctAnswersCount}
+            totalQuestions={currentQuestions.length}
           />
         )
       )}
